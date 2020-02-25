@@ -1,0 +1,150 @@
+{% extends "layout.html" %}
+{% block body %}
+<head>
+  <script>
+  $(function(){
+    var $select = $(".option_ls_100");
+    for (i=1;i<=100;i++){
+        $select.append($('<option></option>').val(i).html(i))
+    }
+  });
+
+  $(document).ready(function(){
+    $("#add_schedule").click(function(){
+        $("af_info").append(
+        '\
+        <div class="deployment_schedule">\
+          <fieldset style="width:300px; display:inline-block; text-align:left;">\
+            <div>\
+              <label for="dep_year" class="ds_form_label">Year:</label>\
+              <input name="dep_y" type="number" class="ds_form_input" min="2010" max="2100"></select>\
+            </div>\
+            <div>\
+              <label for="dep_q" class="ds_form_label">Quarter:</label>\
+              <select name="dep_q" class="ds_form_input">\
+                <option value = "1">01</option>\
+                <option value = "2">02</option>\
+                <option value = "3">03</option>\
+                <option value = "4">04</option>\
+              </select>\
+            </div>\
+            <div>\
+              <label for="dep_amt" class="ds_form_label">Amount:</label>\
+              <input name="dep_amt" type="number" class="ds_form_input" min="1" max="9999">\
+            </div>\
+            <button id="del_schedule" class="btn btn-danger btn-sm" type="button"><span class="fa fa-minus" aria-hidden="true" color="white"></span></button>\
+          </fieldset>\
+        </div>\
+        '
+        );
+    });
+     $('#rmv_schedule').click(function(){
+       $('.deployment_schedule').remove();
+    })
+    $('af_info').on('click', '#del_schedule', function(){
+       $(this).parent().parent().remove()
+    })
+  });
+  </script>
+</head>
+
+<body>
+{% macro form_group(label=false) %}
+    <div class=form-group>
+        {% if label %}<label>{{ label }}</label>{% endif %}
+        {{ caller() }}
+     </div>
+{% endmacro %}
+
+
+<!--<form class=form action="{{ url_for('roi') }}" method="POST">-->
+    <!--{% if form.hidden_tag is defined %}-->
+        <!--{{ form.hidden_tag() }}-->
+    <!--{% endif %}-->
+
+    <!--{% for f in form %}-->
+        <!--{% if not f.type == 'FieldList' and not f.type == 'HiddenField' and not f.type == 'CSRFTokenField' %}-->
+            <!--{% call form_group(f.label.text) %}-->
+                <!--{{ f(class_='form-control') }}-->
+            <!--{% endcall %}-->
+        <!--{% else %}-->
+            <!--{% for _form in f %}-->
+                <!--<fieldset>-->
+                    <!--<legend>Deploy Schedules</legend>-->
+                <!--{% for subfield in _form %}-->
+                    <!--{% if not subfield.type == 'HiddenField' and not subfield.type == 'CSRFTokenField' %}-->
+                        <!--{% call form_group(subfield.label.text) %}-->
+                            <!--{{ subfield(class_='form-control') }}-->
+                        <!--{% endcall %}-->
+                    <!--{% endif %}-->
+                <!--{% endfor %}-->
+            <!--{% endfor %}-->
+            <!--</fieldset>-->
+        <!--{% endif %}-->
+    <!--{% endfor %}-->
+    <!--</form>-->
+
+
+
+<form class=form action="{{ url_for('roi') }}" method="POST">
+    {{ form.csrf_token }}
+
+
+<af_info>
+  <div class="section_header">Aircraft / Flight Information:</div>
+  <hr>
+    {{ form.ac_type() }}
+    {{ form.ac_cnt() }}
+    {{ form.flight_per_year() }}
+    {{ form.night_flight_per() }}
+    {{ form.avg_flight_dur() }}
+    {{ form.busi_passenger_per() }}
+
+    {{ form.dep_schedule() }}
+<af_info>
+
+    {{ form.ori_region() }}
+    {{ form.dest_region() }}
+
+    {{ form.text_basic() }}
+    {{ form.browse_mid() }}
+    {{ form.stream_top() }}
+
+<hr>
+  <div class="form-group">
+    <label for="exampleInputFile">Sample - File input</label>
+    <input type="file" id="exampleInputFile">
+    <p class="help-block">Example block-level help text here.</p>
+  </div>
+
+  <div class="form-group">
+    <label>
+      <input type="checkbox"> Sample - Check box
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label for="formControlRange"> Sample - Range input</label>
+    <input type="range" min="0" max="100" value = "25" class="form-control-range" id="formControlRange"><span id="demo"></span>
+  </div>
+  <script>
+  var slider = document.getElementById("formControlRange");
+  var output = document.getElementById("demo");
+  output.innerHTML = slider.value;
+  slider.oninput = function() {
+    output.innerHTML = this.value;
+  };
+  </script>
+
+  <div class="form-group">
+    <label for="formControlRange"> Sample - Option input</label>
+    <select class="option_ls_100"></select>
+  </div>
+<hr>
+
+  <button id="form_submit" class="btn btn-primary btn-sm" type="submit" value="Submit">Submit</button>
+</form>
+</body>
+
+{% endblock %}
+

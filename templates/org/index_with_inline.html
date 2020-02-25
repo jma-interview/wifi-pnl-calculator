@@ -1,0 +1,499 @@
+{% extends "layout.html" %}
+{% block body %}
+<!-- UI v1 -->
+<head>
+    <div id="region" data-region='{{ui_config.region|tojson}}'></div>
+    <div id="region_ls" data-region='{{ui_config.region_ls|tojson}}'></div>
+
+  <!--<script>-->
+ <!--$(function(){-->
+    <!--var $select = $(".option_ls_100");-->
+    <!--for (i=1;i<=100;i++){-->
+        <!--$select.append($('<option></option>').val(i).html(i))-->
+    <!--}-->
+  <!--});-->
+
+  <!--$(document).ready(function(){-->
+    <!--$("#add_schedule").click(function(){-->
+        <!--$("af_info").append(-->
+        <!--'\-->
+        <!--<div class="deployment_schedule">\-->
+          <!--<fieldset style="width:300px; display:inline-block; text-align:left;">\-->
+            <!--<div>\-->
+              <!--<label for="dep_year" class="ds_form_label">Year:</label>\-->
+              <!--<input name="dep_y" type="number" class="ds_form_input" min="2010" max="2100"></select>\-->
+            <!--</div>\-->
+            <!--<div>\-->
+              <!--<label for="dep_q" class="ds_form_label">Quarter:</label>\-->
+              <!--<select name="dep_q" class="ds_form_input">\-->
+                <!--<option value = "1">01</option>\-->
+                <!--<option value = "2">02</option>\-->
+                <!--<option value = "3">03</option>\-->
+                <!--<option value = "4">04</option>\-->
+              <!--</select>\-->
+            <!--</div>\-->
+            <!--<div>\-->
+              <!--<label for="dep_amt" class="ds_form_label">Amount:</label>\-->
+              <!--<input name="dep_amt" type="number" class="ds_form_input" min="1" max="9999">\-->
+            <!--</div>\-->
+            <!--<button id="del_schedule" class="btn btn-danger btn-sm" type="button"><span class="fa fa-minus" aria-hidden="true" color="white"></span></button>\-->
+          <!--</fieldset>\-->
+        <!--</div>\-->
+        <!--'-->
+        <!--);-->
+    <!--});-->
+     <!--$('#rmv_schedule').click(function(){-->
+       <!--$('.deployment_schedule').remove();-->
+    <!--})-->
+    <!--$('af_info').on('click', '#del_schedule', function(){-->
+       <!--$(this).parent().parent().remove()-->
+    <!--})-->
+  <!--});-->
+
+  <!--$(document).ready(function(){-->
+    <!--$("#add_flight").click(function(){-->
+        <!--$(".flight_form").append(-->
+        <!--'\-->
+         <!--<tr class="flight_information">\-->
+          <!--<td>\-->
+            <!--<div class="form-group">\-->
+              <!--<select class="orig_reg" name="orig_reg">\-->
+                <!--{% for key, value in ui_config.region.items() %}\-->
+                <!--<option value="{{ value }}" >{{ key }}</option>\-->
+                <!--{% endfor %}\-->
+              <!--</select>\-->
+            <!--</div>\-->
+          <!--</td>\-->
+          <!--<td>\-->
+           <!--<div class="form-group">\-->
+             <!--<select class="dest_reg" name="dest_reg">\-->
+               <!--{% for key, value in ui_config.region.items() %}\-->
+               <!--<option value="{{ value }}">{{ key }}</option>\-->
+               <!--{% endfor %}\-->
+             <!--</select>\-->
+           <!--</div>\-->
+         <!--</td>\-->
+         <!--<td>\-->
+           <!--<input type="number" min= {{ui_config.seat_count.min}} max={{ui_config.seat_count.max}} \-->
+                  <!--class="form-control" id="st_cnt" name="st_cnt" placeholder="" required="required">\-->
+         <!--</td>\-->
+         <!--<td>\-->
+           <!--<input type="number" min= {{ui_config.seat_count.min}} max={{ui_config.seat_count.max}} \-->
+                  <!--class="form-control" id="eco_cnt" name="eco_cnt" required="required">\-->
+         <!--</td>\-->
+         <!--<td>\-->
+           <!--<div class="form-check">\-->
+             <!--<input id="redeye_Hidden" type="hidden" value=0 name="redeye">\-->
+             <!--<input class="form-check-input" type="checkbox" name="redeye" id="redeye" value=1>\-->
+             <!--<label class="form-check-label" for="redeye">Night Flight</label>\-->
+           <!--</div>\-->
+         <!--</td>\-->
+         <!--<td>\-->
+           <!--<input type="number" min="0" max="30" step=".1"\-->
+                  <!--class="form-control" id="f_dur" name="f_dur" required="required">\-->
+         <!--</td>\-->
+         <!--<td>\-->
+           <!--<div class="form-check">\-->
+             <!--<input id="service_ife_Hidden" type="hidden" value=0 name="service_ife">\-->
+             <!--<input class="form-check-input" type="checkbox" name="service_ife" id="service_ife" value=1>\-->
+             <!--<label class="form-check-label" for="service_ife">IFE</label>\-->
+           <!--</div>\-->
+           <!--<div class="form-check">\-->
+             <!--<input id="service_tv_Hidden" type="hidden" value=0 name="service_tv">\-->
+             <!--<input class="form-check-input" type="checkbox" name="service_tv" id="service_tv" value=1>\-->
+             <!--<label class="form-check-label" for="service_tv">TV</label>\-->
+           <!--</div>\-->
+           <!--<div class="form-check">\-->
+             <!--<input id="service_phone_Hidden" type="hidden" value=0 name="service_phone">\-->
+             <!--<input class="form-check-input" type="checkbox" name="service_phone" id="service_phone" value=1>\-->
+             <!--<label class="form-check-label" for="service_phone">Phone</label>\-->
+           <!--</div>\-->
+           <!--<div class="form-check">\-->
+             <!--<input id="service_media_Hidden" type="hidden" value=0 name="service_media">\-->
+             <!--<input class="form-check-input" type="checkbox" name="service_media" id="service_media" value=1>\-->
+             <!--<label class="form-check-label" for="service_media">1Media</label>\-->
+           <!--</div>\-->
+         <!--</td>\-->
+         <!--<td>\-->
+             <!--<div class="form-check">\-->
+               <!--<input id="prod_time_Hidden" type="hidden" value=0 name="prod_time">\-->
+               <!--<input class="form-check-input" type="checkbox" name="prod_time" id="prod_time" value=1>\-->
+               <!--<label class="form-check-label" for="prod_time">Time</label>\-->
+           <!--</div>\-->
+           <!--<div class="form-check">\-->
+             <!--<input id="prod_mb_Hidden" type="hidden" value=0 name="prod_mb">\-->
+             <!--<input class="form-check-input" type="checkbox" name="prod_mb" id="prod_mb" value=1>\-->
+             <!--<label class="form-check-label" for="prod_mb">MB</label>\-->
+           <!--</div>\-->
+         <!--</td>\-->
+         <!--<td>\-->
+           <!--<input type="number" min="0" max="1000"\-->
+                  <!--class="form-control" id="ac_cnt" name="ac_cnt" required="required">\-->
+         <!--</td>\-->
+         <!--<td>\-->
+           <!--<input type="number" min="0"  max="5000"\-->
+                  <!--class="form-control" id="f_per" name="f_per" required="required">\-->
+         <!--</td>\-->
+         <!--<td>\-->
+           <!--<button id="del_flight" class="btn btn-danger btn-sm" type="button" >\-->
+           <!--<span class="fa fa-minus" aria-hidden="true" color="white"></span></button>\-->
+         <!--</td>\-->
+       <!--</tr>\-->
+         <!--'-->
+        <!--);-->
+    <!--});-->
+    <!--$('#rmv_flight').click(function(){-->
+      <!--$('.flight_inAircraft Count:formation').remove();-->
+      <!--});-->
+    <!--$('tbody').on('click', '#del_flight', function(){-->
+      <!--$(this).parent().parent().remove()-->
+      <!--})-->
+    <!--});-->
+  <!--</script>-->
+<!--<script src="{{ url_for('static', filename='js/inline.js') }}"></script>-->
+
+
+{% block javascript %}
+    <script type="text/javascript">
+        {{ js_include("inline.js") | safe }}
+    </script>
+{% endblock %}
+
+</head>
+
+<hr>
+
+<body>
+<form id="roi_form" action="{{ url_for('roi') }}" method="POST">
+    <div class="card-deck mb-3 text-left">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <strong class="section_header ">General Information: </strong>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="form_label" for="fleet_ac_cnt">Total Aircraft Count: </label>
+                    <input type="number" class="form-control" id="fleet_ac_cnt" name="fleet_ac_cnt" placeholder="number of aircraft" required="required">
+                </div>
+                <div class="form-group">
+                    <label class="form_label" for="fleet_f_per_y">Total Flights Per Year: </label>
+                    <input type="number" class="form-control" id="fleet_f_per_y" name="fleet_f_per_y" placeholder="flights per year" required="required">
+                </div>
+
+                <hr>
+                <!---->
+                <div class="rev_model">
+                    <nav class="nav nav-tabs nav-justified">
+                        <a class="nav-item nav-link active" data-toggle="tab" href="#whole_sale">Wholesale</a>
+                        <a class="nav-item nav-link " data-toggle="tab" href="#rev_share">Revenue Share</a>
+                    </nav>
+
+                    <div class="tab-content">
+                        <div id="whole_sale" class="tab-pane fade show active">
+                            <!--<h3>Wholesale</h3>-->
+                            <div class="form-group">
+                                <input id='whole_sale_Hidden' type='hidden' value=0 name='whole_sale'>
+                                <label class="form-check-label" for="whole_sale">
+                                    <strong class="section_header "> Wholesale: </strong>
+                                </label>
+                                <input class="checkbox style-2" type="checkbox"
+                                       name="whole_sale" id="whole_sale" value=1>
+                            </div>
+                        </div>
+                        <div id="rev_share" class="tab-pane fade">
+                            <!--<h3>Revenue Share</h3>-->
+                            <div class="form-group">
+                                <input id='rev_share_Hidden' type='hidden' value=0 name='rev_share'>
+                                <label class="form-check-label" for="rev_share">
+                                    <strong class="section_header "> Revenue Share: </strong>
+                                </label>
+                                <input class="checkbox style-2" type="checkbox" name="rev_share" id="rev_share" value=1>
+                            </div>
+
+                            <table class="table table-striped" >
+                                <!--<caption> Global Price Range </caption>-->
+                                <thead>
+                                <tr>
+                                    <th scope="col">PAC (%)</th>
+                                    <th scope="col">Airline (%)</th>
+                                    <th scope="col">3rd Party WISP (%)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                  <td>
+                                      <input type="number" min="0" max="100"
+                                       class="form-control" id="pac_pct" name="pac_pct" value=0
+                                       placeholder="revenue % for PAC" required="required">
+                                  </td>
+                                  <td>
+                                      <input type="number" min="0" max="100"
+                                       class="form-control" id="air_pct" name="air_pct" value=0
+                                       placeholder="revenue % for Airline" required="required">
+                                  </td>
+                                  <td>
+                                      <input type="number" min="0" max="100"
+                                       class="form-control" id="wisp_pct" name="wisp_pct" value=0
+                                       placeholder="revenue % for Third Party WISP" required="required">
+                                  </td>
+                                </tr>
+                                </tbody>
+                                </table>
+
+
+
+                            <!--<div class="form-group">-->
+                                <!--<label class="form_label" for="pac_pct">PAC %: </label>-->
+                                <!--<input type="number" min="0" max="100"-->
+                                       <!--class="form-control" id="pac_pct" name="pac_pct" value=0-->
+                                       <!--placeholder="revenue % for PAC" required="required">-->
+                            <!--</div>-->
+                            <!--<div class="form-group">-->
+                                <!--<label class="form_label" for="air_pct">Airline %: </label>-->
+                                <!--<input type="number" min="0" max="100"-->
+                                       <!--class="form-control" id="air_pct" name="air_pct" value=0-->
+                                       <!--placeholder="revenue % for Airline" required="required">-->
+                            <!--</div>-->
+                            <!--<div class="form-group">-->
+                                <!--<label class="form_label" for="wisp_pct">Third Party WISP %: </label>-->
+                                <!--<input type="number" min="0" max="100"-->
+                                       <!--class="form-control" id="wisp_pct" name="wisp_pct" value=0-->
+                                       <!--placeholder="revenue % for Third Party WISP" required="required">-->
+                            <!--</div>-->
+
+                        </div>
+                    </div>
+                </div>
+            <!---->
+            </div>
+        </div>
+
+
+
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header">
+            <strong class="section_header ">Price Information: </strong>
+          </div>
+
+          <div class="card-body">
+              <div class="form-group">
+                <label class="form_label"  for="price_text">Text (Basic): {{ui_config.price.text.min}} - {{ui_config.price.text.max}}  </label>
+                <!--<input type="text" class="form-control" id="text_basic" name="text_basic" placeholder="price of text / basic package">-->
+                <input type="range" class="form-control-range" class="form-control" id="price_text_range" name="price_text"
+                       min= {{ui_config.price.text.min}} max={{ui_config.price.text.max}} value = {{ui_config.price.text.default}}>
+                  <span id="price_text"></span>
+              </div>
+              <!--<script>-->
+              <!--var slider_txt = document.getElementById("price_text_range");-->
+              <!--var output_txt = document.getElementById("price_text");-->
+              <!--output_txt.innerHTML = slider_txt.value;-->
+              <!--slider_txt.oninput = function() {-->
+                <!--output_txt.innerHTML = this.value;-->
+              <!--};-->
+              <!--</script>-->
+              <script src="{{ url_for('static', filename='js/price_text.js') }}"></script>
+
+              <div class="form-group">
+                <label class="form_label" for="price_browse">Browse (Mid): {{ui_config.price.browse.min}} - {{ui_config.price.browse.max}}</label>
+                <!--<input type="text" class="form-control" id="browse_mid" name="browse_mid" placeholder="price of browse / mid package">-->
+                <input type="range" class="form-control-range" class="form-control" id="price_browse_range" name="price_browse"
+                       min= {{ui_config.price.browse.min}} max={{ui_config.price.browse.max}} value = {{ui_config.price.browse.default}}>
+                  <span id="price_browse" ></span>
+
+              </div>
+              <!--<script>-->
+              <!--var slider_browse = document.getElementById("price_browse_range");-->
+              <!--var output_browse = document.getElementById("price_browse");-->
+              <!--output_browse.innerHTML = slider_browse.value;-->
+              <!--slider_browse.oninput = function() {-->
+                <!--output_browse.innerHTML = this.value;-->
+              <!--};-->
+              <!--</script>-->
+              <script src="{{ url_for('static', filename='js/price_browse.js') }}"></script>
+
+
+              <div class="form-group">
+                <label class="form_label"  for="price_stream">Stream (Top): {{ui_config.price.stream.min}} - {{ui_config.price.stream.max}}</label>
+                <!--<input type="text" class="form-control" id="stream_top" name="stream_top" placeholder="price of stream / top package">-->
+                <input type="range" class="form-control-range" class="form-control" id="price_stream_range" name="price_stream"
+                       min= {{ui_config.price.stream.min}} max={{ui_config.price.stream.max}} value = {{ui_config.price.stream.default}}>
+                  <span id="price_stream"></span>
+              </div>
+              <!--<script>-->
+              <!--var slider_stream = document.getElementById("price_stream_range");-->
+              <!--var output_stream = document.getElementById("price_stream");-->
+              <!--output_stream.innerHTML = slider_stream.value;-->
+              <!--slider_stream.oninput = function() {-->
+                <!--output_stream.innerHTML = this.value;-->
+              <!--};-->
+              <!--</script>-->
+              <script src="{{ url_for('static', filename='js/price_stream.js') }}"></script>
+
+
+              <hr>
+              <caption> Market Price Range </caption>
+              <table class="table table-striped" >
+                <!--<caption> Global Price Range </caption>-->
+                <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Text</th>
+                  <th scope="col">Browse</th>
+                  <th scope="col">Stream</th>
+                </tr>
+                </thead>
+                 <tr>
+                  <th scope="row">Price</th>
+                  <td>{{ ui_config.price.text.global }}</td>
+                  <td>{{ ui_config.price.browse.global }}</td>
+                  <td>{{ ui_config.price.stream.global }}</td>
+                </tr>
+               </table>
+          </div>
+        </div>
+  </div>
+    <hr>
+
+
+
+
+  <hr>
+  <strong class="section_header ">Flight Information: </strong>
+  <table class="table table-bordered table-condensed">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Origin</th>
+          <th scope="col">Destination</th>
+          <!--<th scope="col">AC Type</th>-->
+          <th scope="col">Seat Count</th>
+          <th scope="col">Economy Seat Count</th>
+          <th scope="col">Night Flight</th>
+          <th scope="col">Flight Duration(Hrs)</th>
+          <th scope="col">Other Services</th>
+          <th scope="col">Product Model</th>
+          <th scope="col">AC Count</th>
+          <th scope="col">Flight Count per AC</th>
+          <th scope="col">
+            <button id="add_flight" class="btn btn-success btn-sm" type="button">
+              <span class="fa fa-plus" aria-hidden="true" color="white"></span>
+            </button>
+            <!--<button id="rmv_flight" class="btn btn-danger btn-sm" type="button">-->
+              <!--<span class="fa fa-remove" aria-hidden="true" color="white"></span>-->
+            <!--</button>-->
+          </th>
+        </tr>
+      </thead>
+      <tbody class="flight_form">
+         <tr class="flight_information">
+          <td>
+            <div class="form-group">
+              <select class="orig_reg" name="orig_reg">
+                {% for key, value in ui_config.region.items() %}
+                <option value="{{ value|safe }}" >{{ key|safe }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <select class="dest_reg" name="dest_reg">
+                {% for key, value in ui_config.region.items() %}
+                <option value="{{ value|safe }}">{{ key|safe }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </td>
+          <!--<td>-->
+            <!--<div class="form-group">-->
+              <!--<select class="ac_tp" name="ac_tp">-->
+                <!--<option value="wide">Wide</option>-->
+                <!--<option value="narrow">Narrow</option>-->
+              <!--</select>-->
+            <!--</div>-->
+          <!--</td>-->
+          <td>
+            <input type="number" min= {{ui_config.seat_count.min}} max={{ui_config.seat_count.max}}
+                   class="form-control" id="st_cnt" name="st_cnt" placeholder="" required="required">
+          </td>
+          <td>
+            <input type="number" min= {{ui_config.seat_count.min}} max={{ui_config.seat_count.max}}
+                   class="form-control" id="eco_cnt" name="eco_cnt" required="required">
+          </td>
+          <td>
+
+            <div class="form-check">
+              <input id='redeye_Hidden' type='hidden' value=0 name='redeye'>
+              <input class="form-check-input" type="checkbox" name="redeye" id="redeye" value=1>
+              <label class="form-check-label" for="redeye">Night Flight</label>
+            </div>
+
+          </td>
+
+          <td>
+            <input type="number" min="0" max="30" step=".1"
+                   class="form-control" id="f_dur" name="f_dur" required="required">
+          </td>
+
+          <td>
+
+            <div class="form-check">
+              <input id='service_ife_Hidden' type='hidden' value=0 name='service_ife'>
+              <input class="form-check-input" type="checkbox" name="service_ife" id="service_ife" value=1>
+              <label class="form-check-label" for="service_ife">IFE</label>
+            </div>
+            <div class="form-check">
+              <input id='service_tv_Hidden' type='hidden' value=0 name='service_tv'>
+              <input class="form-check-input" type="checkbox" name="service_tv" id="service_tv" value=1>
+              <label class="form-check-label" for="service_tv">TV</label>
+            </div>
+            <div class="form-check">
+              <input id='service_phone_Hidden' type='hidden' value=0 name='service_phone'>
+              <input class="form-check-input" type="checkbox" name="service_phone" id="service_phone" value=1>
+              <label class="form-check-label" for="service_phone">Phone</label>
+            </div>
+            <div class="form-check">
+              <input id='service_media_Hidden' type='hidden' value=0 name='service_media'>
+              <input class="form-check-input" type="checkbox" name="service_media" id="service_media" value=1>
+              <label class="form-check-label" for="service_media">1Media</label>
+            </div>
+
+          </td>
+
+          <td>
+              <div class="form-check">
+                <input id='prod_time_Hidden' type='hidden' value=0 name='prod_time'>
+                <input class="form-check-input" type="checkbox" name="prod_time" id="prod_time" value=1>
+                <label class="form-check-label" for="prod_time">Time Cap</label>
+            </div>
+            <div class="form-check">
+              <input id='prod_mb_Hidden' type='hidden' value=0 name='prod_mb'>
+              <input class="form-check-input" type="checkbox" name="prod_mb" id="prod_mb" value=1>
+              <label class="form-check-label" for="prod_mb">MB Cap</label>
+            </div>
+          </td>
+
+          <td>
+            <input type="number" min="0" max="1000"
+                   class="form-control" id="ac_cnt" name="ac_cnt" required="required">
+          </td>
+
+          <td>
+            <input type="number" min="0" max="5000"
+                   class="form-control" id="f_per" name="f_per" required="required">
+          </td>
+          <td>
+            <button id="del_flight" class="btn btn-danger btn-sm" type="button" disabled><span class="fa fa-minus" aria-hidden="true" color="white"></span></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+<hr>
+  <button id="form_submit" class="btn btn-primary btn-lg float-right active"  type="submit" value="Submit">  Submit  </button>
+</form>
+
+</div>
+
+
+</body>
+
+{% endblock %}

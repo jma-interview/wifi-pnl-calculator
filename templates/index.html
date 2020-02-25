@@ -1,0 +1,622 @@
+{% extends "layout.html" %}
+{% block body %}
+<!-- UI v1 -->
+<head>
+
+    <div id="region_ls" data-region='{{ui_config.region_ls|tojson}}'></div>
+    <script src="{{ url_for('static', filename='js/inline.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/fleet.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flight.js') }}"></script>
+
+</head>
+
+<hr>
+
+<body>
+<form id="roi_form" action="{{ url_for('roi') }}" method="POST">
+
+<nav class="nav nav-tabs nav-justified">
+  <a class="nav-item nav-link active" data-toggle="tab" href="#fleet">Fleet</a>
+  <a class="nav-item nav-link" data-toggle="tab" href="#flight">Flight</a>
+  <a class="nav-item nav-link" data-toggle="tab" href="#additional">Pricing</a>
+</nav>
+
+<div class="tab-content">
+  <div id="fleet" class="tab-pane fade show active">
+<hr>
+
+    <div class="form-group">
+        <label class="form_label" for="airline_region">Airline Region: </label>
+        <br>
+            <select class="orig_reg" name="airline_region" id="airline_region">
+                {% for value in ui_config.region_ls %}
+                    <option value="{{ value|safe }}" >{{ value|safe }}</option>
+                {% endfor %}
+            </select>
+    </div>
+
+  <strong class="section_header ">Short Haul Fleet Information: </strong>
+  <table class="table table-bordered table-condensed">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Type</th>
+          <th scope="col">Aircraft Type</th>
+          <th scope="col">Aircraft Count</th>
+          <th scope="col">Seat Count</th>
+          <th scope="col">Economy Seat Count</th>
+          <th scope="col">Flight Duration (Hrs)</th>
+          <th scope="col">Flight Count per AC</th>
+          <th scope="col">Other Services</th>
+
+
+          <th scope="col">
+            <!--<button id="add_short_fleet" class="btn btn-success btn-sm" type="button">-->
+              <!--&lt;!&ndash;<span class="fa fa-plus" aria-hidden="true" color="white"></span>&ndash;&gt;-->
+            <!--</button>-->
+            <!--<button id="add_long_fleet" class="btn btn-success btn-sm" type="button">-->
+              <!--<span class="fa fa-plus" aria-hidden="true" color="white">long</span>-->
+            <!--</button>-->
+
+            <button id="add_short_fleet" class="btn btn-success btn-sm" type="button">
+              <span class="fa fa-plus" aria-hidden="true" color="white"></span>
+            </button>
+
+            <!--<button id="rmv_flight" class="btn btn-danger btn-sm" type="button">-->
+              <!--<span class="fa fa-remove" aria-hidden="true" color="white"></span>-->
+            <!--</button>-->
+          </th>
+
+        </tr>
+      </thead>
+      <tbody class="short_fleet_form">
+         <tr class="short_fleet_information">
+
+          <td>
+            <div class="form-group">
+              <select class="fleet_type" name="fleet_type">
+
+                <option value=0 default selected >Short Haul</option>
+                  <option value=1 disabled >Long Haul</option>
+
+              </select>
+            </div>
+          </td>
+
+          <td>
+            <div class="form-group">
+               <input type="text" class="form-control" id="ac_type" name="ac_type" placeholder="type of aircraft" required="required">
+            </div>
+          </td>
+
+          <td>
+            <div class="form-group">
+                <input type="number" min= 0 max=999
+                   class="form-control" id="ac_cnt" name="ac_cnt" required="required">
+            </div>
+          </td>
+
+          <td>
+            <input type="number" min= {{ui_config.seat_count.min}} max={{ui_config.seat_count.max}}
+                   class="form-control" id="st_cnt" name="st_cnt" placeholder="" required="required">
+          </td>
+
+          <td>
+            <input type="number" min= {{ui_config.seat_count.min}} max={{ui_config.seat_count.max}}
+                   class="form-control" id="eco_cnt" name="eco_cnt" required="required">
+          </td>
+          <td>
+            <input type="number" min="0" max="30" step=".1"
+                   class="form-control" id="f_dur" name="f_dur" required="required">
+          </td>
+          <td>
+            <input type="number" min="0" max="5000"
+                   class="form-control" id="f_per" name="f_per" required="required">
+          </td>
+
+
+
+          <td>
+
+            <div class="form-check">
+              <input id='service_ife_Hidden' type='hidden' value=0 name='service_ife'>
+              <input class="form-check-input" type="checkbox" name="service_ife" id="service_ife" value=1>
+              <label class="form-check-label" for="service_ife">IFE</label>
+            </div>
+            <div class="form-check">
+              <input id='service_tv_Hidden' type='hidden' value=0 name='service_tv'>
+              <input class="form-check-input" type="checkbox" name="service_tv" id="service_tv" value=1>
+              <label class="form-check-label" for="service_tv">TV</label>
+            </div>
+            <div class="form-check">
+              <input id='service_phone_Hidden' type='hidden' value=0 name='service_phone'>
+              <input class="form-check-input" type="checkbox" name="service_phone" id="service_phone" value=1>
+              <label class="form-check-label" for="service_phone">Phone</label>
+            </div>
+            <div class="form-check">
+              <input id='service_media_Hidden' type='hidden' value=0 name='service_media'>
+              <input class="form-check-input" type="checkbox" name="service_media" id="service_media" value=1>
+              <label class="form-check-label" for="service_media">1Media</label>
+            </div>
+
+          </td>
+
+
+          <td>
+            <button id="fleet_del" class="btn btn-danger btn-sm" type="button" disabled><span class="fa fa-minus" aria-hidden="true" color="white"></span></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  <strong class="section_header ">Long Haul Fleet Information: </strong>
+  <table class="table table-bordered table-condensed">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Type</th>
+          <th scope="col">Aircraft Type</th>
+          <th scope="col">Aircraft Count</th>
+          <th scope="col">Seat Count</th>
+          <th scope="col">Economy Seat Count</th>
+          <th scope="col">Flight Duration (Hrs)</th>
+          <th scope="col">Flight Count per AC</th>
+          <th scope="col">Other Services</th>
+
+
+          <th scope="col">
+
+            <button id="add_long_fleet" class="btn btn-success btn-sm" type="button">
+              <span class="fa fa-plus" aria-hidden="true" color="white"></span>
+            </button>
+
+            <!--<button id="rmv_flight" class="btn btn-danger btn-sm" type="button">-->
+              <!--<span class="fa fa-remove" aria-hidden="true" color="white"></span>-->
+            <!--</button>-->
+          </th>
+
+        </tr>
+      </thead>
+      <tbody class="long_fleet_form">
+         <tr class="long_fleet_information">
+
+          <td>
+            <div class="form-group">
+              <select class="fleet_type" name="fleet_type">
+
+                <option value=0 disabled >Short Haul</option>
+                  <option value=1  default selected >Long Haul</option>
+
+              </select>
+            </div>
+          </td>
+
+          <td>
+            <div class="form-group">
+               <input type="text" class="form-control" id="ac_type" name="ac_type" placeholder="type of aircraft" required="required">
+            </div>
+          </td>
+
+          <td>
+            <div class="form-group">
+                <input type="number" min= 0 max=999
+                   class="form-control" id="ac_cnt" name="ac_cnt" required="required">
+            </div>
+          </td>
+
+          <td>
+            <input type="number" min= {{ui_config.seat_count.min}} max={{ui_config.seat_count.max}}
+                   class="form-control" id="st_cnt" name="st_cnt" placeholder="" required="required">
+          </td>
+
+          <td>
+            <input type="number" min= {{ui_config.seat_count.min}} max={{ui_config.seat_count.max}}
+                   class="form-control" id="eco_cnt" name="eco_cnt" required="required">
+          </td>
+          <td>
+            <input type="number" min="0" max="30" step=".1"
+                   class="form-control" id="f_dur" name="f_dur" required="required">
+          </td>
+          <td>
+            <input type="number" min="0" max="5000"
+                   class="form-control" id="f_per" name="f_per" required="required">
+          </td>
+
+
+
+          <td>
+
+            <div class="form-check">
+              <input id='service_ife_Hidden' type='hidden' value=0 name='service_ife'>
+              <input class="form-check-input" type="checkbox" name="service_ife" id="service_ife" value=1>
+              <label class="form-check-label" for="service_ife">IFE</label>
+            </div>
+            <div class="form-check">
+              <input id='service_tv_Hidden' type='hidden' value=0 name='service_tv'>
+              <input class="form-check-input" type="checkbox" name="service_tv" id="service_tv" value=1>
+              <label class="form-check-label" for="service_tv">TV</label>
+            </div>
+            <div class="form-check">
+              <input id='service_phone_Hidden' type='hidden' value=0 name='service_phone'>
+              <input class="form-check-input" type="checkbox" name="service_phone" id="service_phone" value=1>
+              <label class="form-check-label" for="service_phone">Phone</label>
+            </div>
+            <div class="form-check">
+              <input id='service_media_Hidden' type='hidden' value=0 name='service_media'>
+              <input class="form-check-input" type="checkbox" name="service_media" id="service_media" value=1>
+              <label class="form-check-label" for="service_media">1Media</label>
+            </div>
+
+          </td>
+
+
+          <td>
+            <button id="fleet_del" class="btn btn-danger btn-sm" type="button" disabled><span class="fa fa-minus" aria-hidden="true" color="white"></span></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+
+
+  <div id="flight" class="tab-pane fade">
+<hr>
+
+  <strong class="section_header ">Short Haul Flight Information: </strong>
+  <table class="table table-bordered table-condensed">
+      <thead class="thead-light">
+        <tr>
+            <th scope="col">Type</th>
+          <th scope="col">Origin</th>
+          <th scope="col">Destination</th>
+          <th scope="col">% of Total Flights</th>
+          <th scope="col">Load Factor (%)</th>
+          <th scope="col">% of Night Flights</th>
+
+          <th scope="col">
+            <button id="add_short_flight" class="btn btn-success btn-sm" type="button">
+              <span class="fa fa-plus" aria-hidden="true" color="white"></span>
+            </button>
+            <!--<button id="rmv_flight" class="btn btn-danger btn-sm" type="button">-->
+              <!--<span class="fa fa-remove" aria-hidden="true" color="white"></span>-->
+            <!--</button>-->
+          </th>
+        </tr>
+      </thead>
+      <tbody class="short_flight_form">
+         <tr class="short_flight_information">
+
+          <td>
+            <div class="form-group">
+              <select class="flight_type" name="flight_type">
+
+                <option value=0 default  selected>Short Haul</option>
+                  <option value=1 disabled >Long Haul</option>
+
+              </select>
+            </div>
+          </td>
+
+          <td>
+            <div class="form-group">
+              <select class="orig_reg" name="orig_reg">
+                {% for key, value in ui_config.region.items() %}
+                <option value="{{ value|safe }}" >{{ key|safe }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <select class="dest_reg" name="dest_reg">
+                {% for key, value in ui_config.region.items() %}
+                <option value="{{ value|safe }}">{{ key|safe }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </td>
+
+          <td>
+           <input type="number" min= 0 max= 100
+                   class="form-control" id="tt_flt" name="tt_flt" placeholder="" required="required">
+          </td>
+
+          <td>
+            <input type="number" min= 0 max= 100
+                   class="form-control" id="ld_fct" name="ld_fct" placeholder="" required="required">
+          </td>
+          <td>
+            <input type="number" min= 0 max= 100
+                   class="form-control" id="nt_flt" name="nt_flt" placeholder="" required="required">
+          </td>
+
+
+          <td>
+            <button id="flight_del" class="btn btn-danger btn-sm" type="button" disabled><span class="fa fa-minus" aria-hidden="true" color="white"></span></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+<!---->
+
+  <strong class="section_header ">Long Haul Flight Information: </strong>
+  <table class="table table-bordered table-condensed">
+      <thead class="thead-light">
+        <tr>
+            <th scope="col">Type</th>
+          <th scope="col">Origin</th>
+          <th scope="col">Destination</th>
+          <th scope="col">% of Total Flights</th>
+          <th scope="col">Load Factor (%)</th>
+          <th scope="col">% of Night Flights</th>
+
+          <th scope="col">
+            <button id="add_long_flight" class="btn btn-success btn-sm" type="button">
+              <span class="fa fa-plus" aria-hidden="true" color="white"></span>
+            </button>
+            <!--<button id="rmv_flight" class="btn btn-danger btn-sm" type="button">-->
+              <!--<span class="fa fa-remove" aria-hidden="true" color="white"></span>-->
+            <!--</button>-->
+          </th>
+        </tr>
+      </thead>
+      <tbody class="long_flight_form">
+         <tr class="long_flight_information">
+
+          <td>
+            <div class="form-group">
+              <select class="flight_type" name="flight_type">
+
+                <option value=0 disabled  >Short Haul</option>
+                  <option value=1 default selected >Long Haul</option>
+
+              </select>
+            </div>
+          </td>
+
+          <td>
+            <div class="form-group">
+              <select class="orig_reg" name="orig_reg">
+                {% for key, value in ui_config.region.items() %}
+                <option value="{{ value|safe }}" >{{ key|safe }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <select class="dest_reg" name="dest_reg">
+                {% for key, value in ui_config.region.items() %}
+                <option value="{{ value|safe }}">{{ key|safe }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </td>
+
+          <td>
+           <input type="number" min= 0 max= 100
+                   class="form-control" id="tt_flt" name="tt_flt" placeholder="" required="required">
+          </td>ARPA per Month ($)
+
+
+          <td>
+            <input type="number" min= 0 max= 100
+                   class="form-control" id="ld_fct" name="ld_fct" placeholder="" required="required">
+          </td>
+          <td>
+            <input type="number" min= 0 max= 100
+                   class="form-control" id="nt_flt" name="nt_flt" placeholder="" required="required">
+          </td>
+
+
+          <td>
+            <button id="flight_del" class="btn btn-danger btn-sm" type="button" disabled><span class="fa fa-minus" aria-hidden="true" color="white"></span></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+
+
+  <div id="additional" class="tab-pane fade">
+      <hr>
+
+            <strong class="section_header ">Contract Type: </strong>
+
+            <div class="form-group">
+                <label class="form_label" > Wholesale Price: </label>
+                <br>
+                <div class="col-auto">
+      <label class="form_label" for="price_per_mb"> $ / MB: </label>
+                <input type="number" step=".001" min="0"
+                       class="form-control"
+                       id="price_per_mb" name="price_per_mb" placeholder="$ / MB" required="required">
+    </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form_label" > Revenue Share: </label>
+
+            <table class="table table-striped" >
+                <!--<caption> Global Price Range </caption>-->
+                <thead>
+                <tr>
+                    <th scope="col">PAC (%)</th>
+                    <th scope="col">Airline (%)</th>
+                    <th scope="col">3rd Party WISP (%)</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="number" min="0" max="100"
+                            class="form-control" id="pac_pct" name="pac_pct" value=0
+                            placeholder="revenue % for PAC" required="required">
+                        </td>
+                        <td>
+                            <input type="number" min="0" max="100"
+                            class="form-control" id="air_pct" name="air_pct" value=0
+                            placeholder="revenue % for Airline" required="required">
+                        </td>
+                        <td>
+                            <input type="number" min="0" max="100"
+                            class="form-control" id="wisp_pct" name="wisp_pct" value=0
+                            placeholder="revenue % for Third Party WISP" required="required">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+        <strong class="section_header ">Price Information: </strong>
+
+            <div class="form-group">
+                <label class="form_label"  for="price_text">Text (Basic): {{ui_config.price.text.min}} - {{ui_config.price.text.max}}
+                </label>
+                <br>
+                <div class="controls form-inline">
+
+                <!--<input type="text" class="form-control" id="text_basic" name="text_basic" placeholder="price of text / basic package">-->
+                    <span style="display:block; width:10px;"> $ </span>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="number"  step=".01" min="0" class="form-control" id="price_text" name="price_text"
+                       min= {{ui_config.price.text.min}} max={{ui_config.price.text.max}} required="required">
+                    </div>
+
+                    <span style="display:block; width:10px;"> / </span>
+
+                    <div class="form-group mx-sm-3 mb-2" >
+
+                        <input type="number" class="form-control" max="1000"  value="0" step=".01" min="0"
+                               id="num_text" name="num_text" required="required"
+                        style="width: 150px;">
+                    </div>
+
+                <select class="unit_text" name="unit_text" id="unit_text">
+                    <option value="mb" > MB </option>
+                    <option value="time" > Hours </option>
+                    <option value="flight" > Flight </option>
+                </select>
+
+                    <span style="display:block; width:10px;">  </span>
+
+                <div class="form-check">
+                  <input id='text_free_Hidden' type='hidden' value=0 name='text_free'>
+                  <input class="form-check-input" type="checkbox" name="text_free" id="text_free" value=1>
+                  <label class="form-check-label" for="text_free">Promotion</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form_label"  for="price_browse">Browse (Mid): {{ui_config.price.browse.min}} - {{ui_config.price.browse.max}}
+                </label>
+                <br>
+                <div class="controls form-inline">
+
+                <!--<input type="text" class="form-control" id="text_basic" name="text_basic" placeholder="price of text / basic package">-->
+                    <span style="display:block; width:10px;"> $ </span>
+                    <div class="form-group mx-sm-3 mb-2">
+                    <input type="number"  step=".01" min="0" class="form-control" id="price_browse" name="price_browse"
+                       min= {{ui_config.price.browse.min}} max={{ui_config.price.browse.max}} required="required">
+                </div>
+                    <span style="display:block; width:10px;"> / </span>
+
+                <div class="form-group mx-sm-3 mb-2">
+                    <input type="number" class="form-control" step=".01" min="0" max = "2000"  value="0" id="num_browse" name="num_browse" required="required"
+                        style="width: 150px;">
+                </div>
+                <select class="unit_browse" name="unit_browse" id="unit_browse">
+                    <option value="mb" > MB </option>
+                    <option value="time" > Hours </option>
+                    <option value="flight" > Flight </option>
+                </select>
+
+                    <span style="display:block; width:10px;">  </span>
+
+                <div class="form-check">
+                  <input id='browse_free_Hidden' type='hidden' value=0 name='browse_free'>
+                  <input class="form-check-input" type="checkbox" name="browse_free" id="browse_free" value=1>
+                  <label class="form-check-label" for="browse_free">Promotion</label>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form_label"  for="price_text">Stream (Top): {{ui_config.price.stream.min}} - {{ui_config.price.stream.max}}
+                </label>
+                <br>
+                <div class="controls form-inline">
+
+                <!--<input type="text" class="form-control" id="text_basic" name="text_basic" placeholder="price of text / basic package">-->
+                    <span style="display:block; width:10px;"> $ </span>
+                    <div class="form-group mx-sm-3 mb-2">
+                    <input type="number"  step=".01" min="0" class="form-control" id="price_stream" name="price_stream"
+                       min= {{ui_config.price.stream.min}} max={{ui_config.price.stream.max}} required="required">
+                </div>
+                    <span style="display:block; width:10px;"> / </span>
+
+                <div class="form-group mx-sm-3 mb-2">
+                    <input type="number" class="form-control" step=".01" min="0" max = "2000" value="0" id="num_stream" name="num_stream" required="required"
+                        style="width: 150px;">
+                </div>
+                <select class="unit_stream" name="unit_stream" id="unit_stream">
+                    <option value="mb" > MB </option>
+                    <option value="time" > Hours </option>
+                    <option value="flight" > Flight </option>
+                </select>
+
+                    <span style="display:block; width:10px;">  </span>
+
+                <div class="form-check">
+                  <input id='stream_free_Hidden' type='hidden' value=0 name='stream_free'>
+                  <input class="form-check-input" type="checkbox" name="stream_free" id="stream_free" value=1>
+                  <label class="form-check-label" for="stream_free">Promotion</label>
+                </div>
+
+              </div>
+            </div>
+
+              <hr>
+              <caption> Market Price Range </caption>
+              <table class="table table-striped" >
+                <!--<caption> Global Price Range </caption>-->
+                <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Text</th>
+                  <th scope="col">Browse</th>
+                  <th scope="col">Stream</th>
+                </tr>
+                </thead>
+                 <tr>
+                  <th scope="row">Price</th>
+                  <td>{{ ui_config.price.text.global }}</td>
+                  <td>{{ ui_config.price.browse.global }}</td>
+                  <td>{{ ui_config.price.stream.global }}</td>
+                </tr>
+               </table>
+
+  <button id="form_submit" class="btn btn-primary btn-lg float-right active"  type="submit" value="Submit">  Submit  </button>
+
+          </div>
+
+</div>
+
+</form>
+
+  <hr>
+
+
+
+
+
+</div>
+
+
+</body>
+
+{% endblock %}
